@@ -1,5 +1,9 @@
 import * as React from 'react';
+<<<<<<< HEAD
 import * as ReactDOM from 'react-dom';
+=======
+import { findDOMNode } from 'react-dom';
+>>>>>>> d50399a80... DetailsList: headers now resize again. (#4325)
 import {
   BaseComponent,
   autobind,
@@ -11,7 +15,7 @@ import {
   createRef
 } from '../../Utilities';
 import { IColumn, DetailsListLayoutMode, ColumnActionsMode } from './DetailsList.types';
-import { FocusZone, FocusZoneDirection } from '../../FocusZone';
+import { IFocusZone, FocusZone, FocusZoneDirection } from '../../FocusZone';
 import { Icon } from '../../Icon';
 import { Layer } from '../../Layer';
 import { GroupSpacer } from '../GroupedList/GroupSpacer';
@@ -30,7 +34,7 @@ const INNER_PADDING = 16;
 const ISPADDED_WIDTH = 24;
 
 export interface IDetailsHeader {
-  focus(): boolean;
+  focus: () => boolean;
 }
 
 export interface IDetailsHeaderProps extends React.Props<DetailsHeader> {
@@ -83,7 +87,7 @@ export class DetailsHeader extends BaseComponent<IDetailsHeaderProps, IDetailsHe
     collapseAllVisibility: CollapseAllVisibility.visible
   };
 
-  private _root = createRef<FocusZone>();
+  private _root = createRef<IFocusZone>();
 
   private _id: string;
 
@@ -103,11 +107,8 @@ export class DetailsHeader extends BaseComponent<IDetailsHeaderProps, IDetailsHe
 
   public componentDidMount() {
     const { selection } = this.props;
-    const rootElement = this._root.value;
-
-    if (!rootElement) {
-      return;
-    }
+    const focusZone = this._root.value;
+    const rootElement = findDOMNode(focusZone as any);
 
     this._events.on(selection, SELECTION_CHANGE, this._onSelectionChanged);
 
@@ -525,9 +526,12 @@ export class DetailsHeader extends BaseComponent<IDetailsHeaderProps, IDetailsHe
         movement = -movement;
       }
 
+      const column = columns[columnResizeDetails!.columnIndex];
+      const requestedSize = columnResizeDetails!.columnMinWidth + movement;
+
       onColumnResized(
-        columns[columnResizeDetails!.columnIndex],
-        columnResizeDetails!.columnMinWidth + movement,
+        column,
+        !!column.maxWidth ? Math.min(column.maxWidth, requestedSize) : requestedSize,
         columnResizeDetails!.columnIndex
       );
     }
