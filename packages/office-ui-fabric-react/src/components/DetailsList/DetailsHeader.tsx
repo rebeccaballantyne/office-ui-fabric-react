@@ -1,9 +1,5 @@
 import * as React from 'react';
-<<<<<<< HEAD
-import * as ReactDOM from 'react-dom';
-=======
 import { findDOMNode } from 'react-dom';
->>>>>>> d50399a80... DetailsList: headers now resize again. (#4325)
 import {
   BaseComponent,
   autobind,
@@ -87,7 +83,7 @@ export class DetailsHeader extends BaseComponent<IDetailsHeaderProps, IDetailsHe
     collapseAllVisibility: CollapseAllVisibility.visible
   };
 
-  private _root = createRef<IFocusZone>();
+  private _root = createRef<IFocusZone | null>();
 
   private _id: string;
 
