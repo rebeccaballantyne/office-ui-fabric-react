@@ -13,14 +13,6 @@ export function getIsChecked(item: IContextualMenuItem): boolean | null {
     return !!(item.isChecked || item.checked);
   }
 
-  if (typeof item.isChecked === 'boolean') {
-    return item.isChecked;
-  }
-
-  if (typeof item.checked === 'boolean') {
-    return item.checked;
-  }
-
   // Item is not checkable.
   return null;
 }
